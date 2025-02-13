@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: postgres_siman
+    restart: always
+    environment:
+      POSTGRES_DB: siman_bd
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      retries: 5
+      start_period: 20s
+
+  backend:
+    build: ./eleangel-fullstack
+    container_name: backend_siman
+    restart: always
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/siman_bd
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: admin
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      JWT_SECRET: X9lpM3kPmwEoscw2gHsNjNvU3wNgi5L5mGsQmuMoBcj9S3RuSqxI
+      JWT_EXPIRATION: 86400000
+    ports:
+      - "9191:9191"
+
+  frontend:
+    build: ./react-front-ele
+    container_name: frontend_siman
+    restart: always
+    ports:
+      - "5173:80" # Exponer el puerto 5173 de la máquina local al puerto 80 del contenedor (puerto de Nginx)
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
