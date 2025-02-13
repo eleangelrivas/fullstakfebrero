@@ -1,4 +1,4 @@
-# Siman Fullstack - Proyecto Backend y Frontend
+# Fullstack - Proyecto Backend y Frontend
 
 Este proyecto incluye una aplicación de backend construida con **Spring Boot** y un frontend desarrollado con **React (Vite)**. El sistema utiliza **PostgreSQL** como base de datos y se despliega con **Docker**. El backend maneja autenticación mediante **JWT** y **Spring Security** con roles.
 
