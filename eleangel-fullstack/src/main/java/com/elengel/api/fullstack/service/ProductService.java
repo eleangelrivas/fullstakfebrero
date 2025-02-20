@@ -17,4 +17,7 @@ public interface ProductService {
     Product updateOneById(Long productId, SaveProduct saveProduct);
 
     Product disableOneById(Long productId);
+
+    void deleteOneById(Long productId);
+
 }

@@ -12,6 +12,6 @@ public interface VentaService {
     Page<VentaDTO> findAll(Pageable pageable);
     Optional<Venta> findOneById(Long id);
 
-
+    Venta guardarVenta(VentaDTO ventaDTO);
 
 }

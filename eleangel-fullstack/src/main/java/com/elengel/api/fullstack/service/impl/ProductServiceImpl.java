@@ -66,4 +66,11 @@ public class ProductServiceImpl implements ProductService {
 
         return productRepository.save(productFromDB);
     }
+
+    @Override
+    public void deleteOneById(Long productId) {
+        Product productFromDB = productRepository.findById(productId)
+                .orElseThrow( () -> new ObjectNotFoundException("Product not found with id " + productId));
+        productRepository.deleteById(productId);
+    }
 }

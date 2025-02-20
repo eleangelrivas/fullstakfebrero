@@ -1,5 +1,6 @@
 package com.elengel.api.fullstack.controller;
 
+import com.elengel.api.fullstack.config.rabbit.VentaProducer;
 import com.elengel.api.fullstack.dto.VentaDTO;
 import com.elengel.api.fullstack.persistence.entity.DetalleVenta;
 import com.elengel.api.fullstack.persistence.entity.Venta;
@@ -24,6 +25,9 @@ public class VentaController {
 
     @Autowired
     private DetalleVentaService detalleVentaService;
+
+    @Autowired
+    private VentaProducer ventaProducer;
 
     @PreAuthorize("hasAuthority('READ_ALL_PRODUCTS')")
     @GetMapping
@@ -50,5 +54,17 @@ public class VentaController {
     public ResponseEntity<List<DetalleVenta>> findDetallesByVentaId(@PathVariable Long id) {
         List<DetalleVenta> detalles = detalleVentaService.findByVentaId(id);
         return ResponseEntity.ok(detalles);
+    }
+
+    /*para rabbitmq usaremos el controller ventas*/
+    @PreAuthorize("hasAuthority('CREATE_ONE_PRODUCT')")
+    @PostMapping
+    public ResponseEntity<String> createVenta(@RequestBody VentaDTO ventaDTO) {
+        // Aquí podrías validar o transformar el DTO si es necesario
+        // Enviar la venta a la cola
+        ventaProducer.sendVentaToQueue(ventaDTO);
+
+        // Devolver respuesta
+        return ResponseEntity.ok("Venta registrada en la cola para su procesamiento.");
     }
 }

@@ -3,12 +3,16 @@ import axios from "axios";
 const API_URL = "http://localhost:9191/api/v1/products";
 const API_CATEGORY = "http://localhost:9191/api/v1/categories";
 
-export const getProducts = async () => {
+//nota en la api page la manejo como p y size como limit
+//se habilito la paginacion 19 feb
+export const getProducts = async (page = 0, size = 10) => {
+  console.log("page: ", page, " size:", size);
   const token = localStorage.getItem("token");
   console.log("token en productos: ",token);
-  const response = await axios.get(API_URL, {
+  const response = await axios.get(API_URL+`?p=${page}&limit=${size}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
+  console.log("despues de paginar:: ", response);
   console.log("response: ",response);
   return response.data;
 };
@@ -70,6 +74,35 @@ export const createProduct = async (data) => {
     throw error;
   }
 };
+
+
+export const deleteProduct = async (productId) => {
+  try {
+    const token = localStorage.getItem("token");
+
+    const response = await fetch(`http://localhost:9191/api/v1/products/${productId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Error al eliminar el producto");
+    }
+
+    // La api me devolvera algo como: { "id_eliminado": 1, "message": "Producto en proceso de eliminación" }
+    const data = await response.json();
+    return data; 
+  } catch (error) {
+    console.error("Error en deleteProduct:", error);
+    throw error;
+  }
+};
+
+
+
 
 export const getChartData = async () => {
   const token = localStorage.getItem("token");

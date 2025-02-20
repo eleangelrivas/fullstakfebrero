@@ -3,6 +3,8 @@ INSERT INTO module (name, base_path) VALUES ('PRODUCT', '/products');
 INSERT INTO module (name, base_path) VALUES ('CATEGORY', '/categories');
 INSERT INTO module (name, base_path) VALUES ('CUSTOMER', '/customers');
 INSERT INTO module (name, base_path) VALUES ('AUTH', '/auth');
+INSERT INTO module (name, base_path) VALUES ('SALES', '/ventas');
+
 
 -- CREACIÓN DE OPERACIONES
 INSERT INTO operation (name, path, http_method, permit_all, module_id) VALUES ('READ_ALL_PRODUCTS','', 'GET', false, 1);
@@ -24,6 +26,12 @@ INSERT INTO operation (name, path, http_method, permit_all, module_id) VALUES ('
 INSERT INTO operation (name, path, http_method, permit_all, module_id) VALUES ('VALIDATE-TOKEN','/validate-token', 'GET', true, 4);
 INSERT INTO operation (name, path, http_method, permit_all, module_id) VALUES ('READ_MY_PROFILE','/profile','GET', false, 4);
 
+-- PARA VENTAS
+INSERT INTO operation (name, path, http_method, permit_all, module_id) VALUES ('CREATE_SALES','', 'POST', false, 5);
+-- PARA ELIMINAR PRODUCTO
+INSERT INTO operation (name, path, http_method, permit_all, module_id) VALUES ('DELETE_ONE_PRODUCT','', 'DELETE', false, 1);
+
+
 -- CREACIÓN DE ROLES
 INSERT INTO role (name) VALUES ('CUSTOMER');
 INSERT INTO role (name) VALUES ('ASSISTANT_ADMINISTRATOR');
@@ -42,6 +50,7 @@ INSERT INTO granted_permission (role_id, operation_id) VALUES (2, 7);
 INSERT INTO granted_permission (role_id, operation_id) VALUES (2, 9);
 INSERT INTO granted_permission (role_id, operation_id) VALUES (2, 15);
 
+
 INSERT INTO granted_permission (role_id, operation_id) VALUES (3, 1);
 INSERT INTO granted_permission (role_id, operation_id) VALUES (3, 2);
 INSERT INTO granted_permission (role_id, operation_id) VALUES (3, 3);
@@ -53,6 +62,8 @@ INSERT INTO granted_permission (role_id, operation_id) VALUES (3, 8);
 INSERT INTO granted_permission (role_id, operation_id) VALUES (3, 9);
 INSERT INTO granted_permission (role_id, operation_id) VALUES (3, 10);
 INSERT INTO granted_permission (role_id, operation_id) VALUES (3, 15);
+INSERT INTO granted_permission (role_id, operation_id) VALUES (3, 16);
+INSERT INTO granted_permission (role_id, operation_id) VALUES (3, 17);
 
 
 /*para demo siman*/
@@ -75,7 +86,7 @@ INSERT INTO granted_permission (role_id, operation_id) VALUES (5, 6);
 INSERT INTO "user" (username, name, password, role_id) VALUES ('eleangel', 'Eduardo Angel', '$2a$10$wyYgeRisuiwVhEVJgS/S8O04c.rUFVaVlDh2zZtjJFkBRu9R3aRWu', 2);
 INSERT INTO "user" (username, name, password, role_id) VALUES ('ele19901', 'Elenilson Rivas', '$2a$10$wyYgeRisuiwVhEVJgS/S8O04c.rUFVaVlDh2zZtjJFkBRu9R3aRWu', 3);
 INSERT INTO "user" (username, name, password, role_id) VALUES ('guardiaele', 'Guardia Rivas', '$2a$10$wyYgeRisuiwVhEVJgS/S8O04c.rUFVaVlDh2zZtjJFkBRu9R3aRWu', 4);
-INSERT INTO "user" (username, name, password, role_id) VALUES ('operador', 'Operador Angel', '$2a$10$wyYgeRisuiwVhEVJgS/S8O04c.rUFVaVlDh2zZtjJFkBRu9R3aRWu', 5);
+INSERT INTO "user" (username, name, password, role_id) VALUES ('operador', 'Operador Angeles', '$2a$10$wyYgeRisuiwVhEVJgS/S8O04c.rUFVaVlDh2zZtjJFkBRu9R3aRWu', 5);
 
 
 -- CREACIÓN DE CATEGORIAS

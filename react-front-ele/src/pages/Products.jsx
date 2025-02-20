@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getProducts, updateProduct, getCategories,createProduct } from "../api/productsApi";  
+import { getProducts, updateProduct, getCategories,createProduct,deleteProduct } from "../api/productsApi";  
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
@@ -7,14 +7,20 @@ import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 import { Dropdown } from "primereact/dropdown";
 import Navbar from "../components/Navbar";
-
-
+import Swal from "sweetalert2";
+import { showLoading } from "../utils/alerts";
 import "primereact/resources/themes/saga-blue/theme.css";  
 import "primereact/resources/primereact.min.css";  
 import "primeicons/primeicons.css";  
 
 const Products = () => {
   const [products, setProducts] = useState([]);
+  //paga paginacion 19 fb
+  const [page, setPage] = useState(0);  
+  const [size, setSize] = useState(10);  
+  const [totalPages, setTotalPages] = useState(0);
+  const [totalElements, setTotalElements] = useState(0);
+
   const [categories, setCategories] = useState([]);  
   const [selectedProduct, setSelectedProduct] = useState(null);  
   const [displayEditDialog, setDisplayEditDialog] = useState(false);  
@@ -23,17 +29,39 @@ const Products = () => {
  
   useEffect(() => {
     const fetchData = async () => {
-      const productsData = await getProducts();
-      setProducts(productsData.content);
+      showLoading("Obteniendo información", "Por favor espere mientras la peticion es completada");
+      try {
+        const productsData = await getProducts(page, size);  
+        setProducts(productsData.content);  
+        setTotalPages(productsData.totalPages);
+        setTotalElements(productsData.totalElements);
+      } catch (error) {
+        console.error("Error al obtener productos:", error);
+      }
 
-      const categoriesData = await getCategories();
+      try {
+        const categoriesData = await getCategories();
       console.error("categorias obtenidas",categoriesData);
       setCategories(categoriesData.content);  
+      } catch (error2) {
+        console.error("Error al obtener cateogrias:", error2);
+      }
+
+      //cerramos mensaje de carga, que notifica al usuario de la peticion
+      Swal.close();
+
+      
     };
     fetchData();
-  }, []);
+  }, [page, size]);
 
- 
+  
+  const handlePageChange = (event) => {
+    setPage(event.page);  
+    setSize(event.rows);  
+  };
+
+
   const handleEdit = (product) => {
     setSelectedProduct(product);  
     setFormData({
@@ -46,10 +74,31 @@ const Products = () => {
   };
 
    
-  const handleDelete = (product) => {
+  const handleDelete = async (product) => {
     console.log("Eliminar producto:", product);
-     
+  
+    Swal.fire({
+      title: "¿Realmente desea eliminar este producto?",
+      text: "Al proceder con esta acción, el producto será eliminado de la BD",
+      showDenyButton: true,
+      showCancelButton: false,
+      confirmButtonText: "Eliminar",
+      denyButtonText: "No eliminar"
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await deleteProduct(product.id);
+          setProducts((prevProducts) => prevProducts.filter((p) => p.id !== product.id));
+          Swal.fire("Producto eliminado", "El producto ha sido eliminado correctamente", "success");
+        } catch (error) {
+          Swal.fire("Error", "No se pudo eliminar el producto", "error");
+        }
+      } else if (result.isDenied) {
+        Swal.fire("Acción cancelada por el usuario", "", "info");
+      }
+    });
   };
+  
 
  
   const handleSubmit1 = async () => {
@@ -184,7 +233,7 @@ const Products = () => {
       />
 
 
-      <DataTable value={products} paginator rows={10} rowsPerPageOptions={[5, 10, 25]}>
+      <DataTable value={products} paginator lazy first={page * size} rows={size} totalRecords={totalElements} onPage={handlePageChange} rowsPerPageOptions={[5, 10, 20, 50]}>
         <Column field="name" header="Producto" sortable />
         <Column field="price" header="Precio" sortable />
         <Column field="status" header="Estado" sortable />

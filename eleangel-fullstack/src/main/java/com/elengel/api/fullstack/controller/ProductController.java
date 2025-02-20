@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -69,6 +71,18 @@ public class ProductController {
     public ResponseEntity<Product> disableOneById(@PathVariable Long productId){
         Product product = productService.disableOneById(productId);
         return ResponseEntity.ok(product);
+    }
+
+    @PreAuthorize("hasAuthority('DELETE_ONE_PRODUCT')")
+    @DeleteMapping("/{productId}")
+    public ResponseEntity<Map<String,Object>> deleteOneById(@PathVariable Long productId){
+        productService.deleteOneById(productId);
+
+        Map<String,Object> map = new HashMap<>();
+        map.put("id_eliminado",productId);
+        map.put("message","Producto eliminado");
+
+        return ResponseEntity.ok(map);
     }
 
 }
