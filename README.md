@@ -25,7 +25,7 @@ cd fullstakfebrero
 
 ### 2. Compilación del backend
 
-(Generación del archivo JAR)
+(Generación del archivo JAR) Recuerda: Es importante tener instalado maven en tu entorno.
 Es necesario generar el archivo JAR del backend antes de levantar los contenedores de Docker. Sigue los siguientes pasos:
 
 2.1 Navegar al directorio raíz del repositorio: 
