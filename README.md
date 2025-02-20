@@ -28,14 +28,16 @@ cd fullstakfebrero
 (Generación del archivo JAR)
 Es necesario generar el archivo JAR del backend antes de levantar los contenedores de Docker. Sigue los siguientes pasos:
 
-2.1 Navegar al directorio de backend: 
-Accede al directorio del backend del proyecto:
+2.1 Navegar al directorio raíz del repositorio: 
+Accede al directorio raíz del proyecto:
 
 ```bash
 cd fullstackfebrero
 ```
 2.2 Encender el contenedor de PostgreSQL
 Para que la aplicación de backend se conecte correctamente a la base de datos PostgreSQL en tiempo de ejecución, primero debemos levantar el contenedor de PostgreSQL. Ejecuta el siguiente comando:
+
+Nota: Eliminar cualquier contenedor e imagen que se pueda haber creado en cualquier versión de este proyecto anteriormente, para evitar cache en docker, si es tu primera vez que usas el proyect, continua sin eliminar ninguna imagen.
 
 Para versiones antiguas de Docker Compose:
 ```bash
